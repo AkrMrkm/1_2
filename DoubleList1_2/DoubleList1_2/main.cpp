@@ -14,7 +14,6 @@ int main()
 	std::ifstream inputFile("Scores.txt"); //ファイル読み込み
 	DoublyLinkedList list;
 
-
 	if (inputFile.is_open())  //ファイル読み込み成功
 	{
 		std::cerr << "ファイルの読み込みに成功しました。" << std::endl;

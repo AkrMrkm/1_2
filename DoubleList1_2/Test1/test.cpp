@@ -23,7 +23,7 @@ namespace ex01_DataStructure
 		TEST(GetDataNumTest, TestGetDataNumWhenEmpty)
 		{
 			DoublyLinkedList list;
-			EXPECT_EQ(0, list.GetDataNum())<<"データの取得に失敗";
+			EXPECT_EQ(0, list.GetDataNum()) << "データの取得に失敗";
 		}
 
 		/**********************************************************************************//**
@@ -37,7 +37,7 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			RecordData data{ 1, "a" };
-			ASSERT_TRUE(list.Push_back(data));
+			ASSERT_TRUE(list.PushBack(data));
 			EXPECT_EQ(1, list.GetDataNum()) << "データの取得に失敗";
 		}
 
@@ -68,7 +68,7 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			RecordData data{ 1, "a" };
-			list.Push_back(data);
+			list.PushBack(data);
 			EXPECT_EQ(1, list.GetDataNum()) << "データの取得に失敗";
 		}
 
@@ -98,14 +98,14 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			RecordData data{ 1, "a" };
-			list.Push_back(data);
+			list.PushBack(data);
 
 			DoublyLinkedList::Iterator it = list.GetBegin();
 			list.Remove(it);
 
 			EXPECT_EQ(0, list.GetDataNum()) << list.GetDataNum();
 		}
-		
+
 		/**********************************************************************************//**
 			@brief		データの削除に失敗した際のデータ数の取得テスト
 			@details	ID:リスト-6\n
@@ -119,7 +119,7 @@ namespace ex01_DataStructure
 			//メモリアローケーションエラー
 			//スキップ
 		}
-		
+
 		/**********************************************************************************//**
 			@brief		リストが空である場合にデータの削除をした際のデータ数の取得テスト
 			@details	ID:リスト-7\n
@@ -136,7 +136,7 @@ namespace ex01_DataStructure
 
 			EXPECT_EQ(0, list.GetDataNum());
 		}
-		
+
 		/**********************************************************************************//**
 			@brief		コンストのメソッドであるか
 			@details	ID:リスト-8\n
@@ -183,9 +183,9 @@ namespace ex01_DataStructure
 			RecordData data3{ 3, "a" };
 
 			//ひとつの要素を挿入
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 
 			DoublyLinkedList::Iterator it = list.GetBegin();
 
@@ -193,9 +193,9 @@ namespace ex01_DataStructure
 
 			//先頭だった要素が二番目になっていたらtrue
 			it = list.GetBegin();
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 
-			EXPECT_EQ(3, itNode->m_data.m_score);
+			EXPECT_EQ(3, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -211,8 +211,8 @@ namespace ex01_DataStructure
 			RecordData data3{ 3, "a" };
 
 			//ひとつの要素を挿入
-			list.Push_back(data);
-			list.Push_back(data2);
+			list.PushBack(data);
+			list.PushBack(data2);
 
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
@@ -220,9 +220,9 @@ namespace ex01_DataStructure
 			it = list.GetBegin();
 			++it;
 			++it;
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 
-			EXPECT_EQ(3, (itNode->m_data.m_score));
+			EXPECT_EQ(3, (itData.m_score));
 		}
 
 		/**********************************************************************************//**
@@ -240,9 +240,9 @@ namespace ex01_DataStructure
 			RecordData data4{ 4, "a" };
 
 			//ひとつの要素を挿入
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 
 			DoublyLinkedList::Iterator it = list.GetBegin();
 			++it;
@@ -251,23 +251,23 @@ namespace ex01_DataStructure
 			list.Insert(it, data4);
 
 			it = list.GetBegin();
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 
 			bool eq = false;
-			if (itNode->m_data.m_score == 1)
+			if (itData.m_score == 1)
 			{
 				++it;
-				itNode = *it;
-				if (itNode->m_data.m_score == 2)
+				itData = *it;
+				if (itData.m_score == 2)
 				{
 					++it;
-					itNode = *it;
-					if (itNode->m_data.m_score == 4)
+					itData = *it;
+					if (itData.m_score == 4)
 					{
 					}
 					++it;
-					itNode = *it;
-					if (itNode->m_data.m_score == 3)
+					itData = *it;
+					if (itData.m_score == 3)
 					{
 						eq = true;
 					}
@@ -275,7 +275,7 @@ namespace ex01_DataStructure
 			}
 
 			//順番が1243になってたらTRUE
-			EXPECT_EQ(true, eq) << itNode->m_data.m_score;
+			EXPECT_EQ(true, eq) << itData.m_score;
 		}
 
 		/**********************************************************************************//**
@@ -321,7 +321,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetBegin();
 
-			bool isBegin,isEnd;
+			bool isBegin, isEnd;
 
 			isBegin = list.Remove(it);
 			it = list.GetEnd();
@@ -346,17 +346,17 @@ namespace ex01_DataStructure
 			RecordData data3{ 3, "a" };
 
 			//ひとつの要素を挿入
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 
 			DoublyLinkedList::Iterator it = list.GetBegin();
 			list.Remove(it);
 
 			it = list.GetBegin();
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 
-			EXPECT_EQ(2, (itNode->m_data.m_score));
+			EXPECT_EQ(2, (itData.m_score));
 		}
 
 		/**********************************************************************************//**
@@ -373,9 +373,9 @@ namespace ex01_DataStructure
 			RecordData data3{ 3, "a" };
 
 			//ひとつの要素を挿入
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 
 			int oldNum = list.GetDataNum();
 
@@ -400,9 +400,9 @@ namespace ex01_DataStructure
 			RecordData data3{ 3, "a" };
 
 			//ひとつの要素を挿入
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 
 			DoublyLinkedList::Iterator it = list.GetBegin();
 			++it;
@@ -410,13 +410,13 @@ namespace ex01_DataStructure
 			list.Remove(it);
 
 			it = list.GetBegin();
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 			bool eq = false;
-			if (itNode->m_data.m_score == 1)
+			if (itData.m_score == 1)
 			{
 				++it;
-				itNode = *it;
-				if (itNode->m_data.m_score == 3)
+				itData = *it;
+				if (itData.m_score == 3)
 				{
 					eq = true;
 				}
@@ -441,9 +441,9 @@ namespace ex01_DataStructure
 			RecordData data3{ 3, "a" };
 
 			//ひとつの要素を挿入
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 
 			//DoublyLinkedList::ConstIterator it = list.GetCBegin();
 			//++it;
@@ -451,20 +451,20 @@ namespace ex01_DataStructure
 			//list.Remove(it);
 
 			//it = list.GetBegin();
-			//DoublyLinkedList::Node* itNode = *it;
+			//RecordData itData = *it;
 			//bool eq = false;
-			//if (itNode->m_data.m_score == 1)
+			//if (itData.m_score == 1)
 			//{
 			//	++it;
-			//	itNode = *it;
-			//	if (itNode->m_data.m_score == 3)
+			//	itData = *it;
+			//	if (itData.m_score == 3)
 			//	{
 			//		eq = true;
 			//	}
 			//}
 
 			//先頭だった要素が二番目になっていたらtrue
-			EXPECT_EQ(true, false)<<"	[ConstIteratorを指定して削除] <- わからない";
+			EXPECT_EQ(true, false) << "	[ConstIteratorを指定して削除] <- わからない";
 		}
 		/**********************************************************************************//**
 			@brief		不正なイテレータを渡して、削除した場合の挙動
@@ -482,16 +482,16 @@ namespace ex01_DataStructure
 			RecordData data3{ 3, "a" };
 
 			//ひとつの要素を挿入
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 
 			int oldNum = list.GetDataNum();
 
 			DoublyLinkedList::Iterator it = list.GetBegin();
-			
+
 			--it;
-			
+
 			list.Remove(it);
 
 			EXPECT_EQ(false, false);
@@ -535,12 +535,12 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 
 			RecordData data{ 1, "a" };
-			list.Push_back(data);
+			list.PushBack(data);
 
 			DoublyLinkedList::Iterator it = list.GetBegin();
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 
-			EXPECT_EQ(1, itNode->m_data.m_score);
+			EXPECT_EQ(1, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -555,13 +555,13 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 
-			list.Push_back(data);
-			list.Push_back(data2); 
-			
-			DoublyLinkedList::Iterator it = list.GetBegin();
-			DoublyLinkedList::Node* itNode = *it;
+			list.PushBack(data);
+			list.PushBack(data2);
 
-			EXPECT_EQ(1, (itNode->m_data.m_score));
+			DoublyLinkedList::Iterator it = list.GetBegin();
+			RecordData itData = *it;
+
+			EXPECT_EQ(1, (itData.m_score));
 		}
 
 		/**********************************************************************************//**
@@ -580,7 +580,7 @@ namespace ex01_DataStructure
 			RecordData data4{ 4, "a" };
 
 			//データを最初に一つ入れる
-			list.Push_back(data);
+			list.PushBack(data);
 
 			//先頭に入れる
 			DoublyLinkedList::Iterator it = list.GetBegin();
@@ -596,10 +596,10 @@ namespace ex01_DataStructure
 			list.Insert(it, data4);
 
 			it = list.GetBegin();
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 
 			//data2の2が入っていればOK
-			EXPECT_EQ(2, (itNode->m_data.m_score));
+			EXPECT_EQ(2, (itData.m_score));
 		}
 
 		/**********************************************************************************//**
@@ -620,11 +620,11 @@ namespace ex01_DataStructure
 			RecordData data5{ 5, "a" };
 
 			//データを最初に5つ入れる
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
-			list.Push_back(data4);
-			list.Push_back(data5);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
+			list.PushBack(data4);
+			list.PushBack(data5);
 
 			//先頭、中央、末尾の要素を削除
 			it = list.GetBegin();
@@ -636,10 +636,10 @@ namespace ex01_DataStructure
 			list.Remove(it);
 
 			it = list.GetBegin();
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 
 			//data2の2が入っていればOK
-			EXPECT_EQ(2, (itNode->m_data.m_score)) << (itNode->m_data.m_score);
+			EXPECT_EQ(2, (itData.m_score)) << (itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -652,7 +652,7 @@ namespace ex01_DataStructure
 		{
 			//スキップ
 		}
-		
+
 
 
 		//=================================== 先頭コンストイテレータの取得 ===================================
@@ -681,11 +681,11 @@ namespace ex01_DataStructure
 
 			RecordData data{ 1, "a" };
 
-			list.Push_back(data);
+			list.PushBack(data);
 			DoublyLinkedList::ConstIterator it = list.GetCBegin();
-			const DoublyLinkedList::Node* itNode = *it;
+			const RecordData itData = *it;
 
-			EXPECT_EQ(1, (itNode->m_data.m_score));
+			EXPECT_EQ(1, (itData.m_score));
 		}
 
 		/**********************************************************************************//**
@@ -700,13 +700,13 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 
-			list.Push_back(data);
-			list.Push_back(data2);
+			list.PushBack(data);
+			list.PushBack(data2);
 
 			DoublyLinkedList::ConstIterator it = list.GetCBegin();
-			const DoublyLinkedList::Node* itNode = *it;
+			const RecordData itData = *it;
 
-			EXPECT_EQ(1, (itNode->m_data.m_score));
+			EXPECT_EQ(1, (itData.m_score));
 		}
 
 		/**********************************************************************************//**
@@ -725,7 +725,7 @@ namespace ex01_DataStructure
 			RecordData data4{ 4, "a" };
 
 			//データを最初に一つ入れる
-			list.Push_back(data);
+			list.PushBack(data);
 
 			//先頭に入れる
 			DoublyLinkedList::Iterator it = list.GetBegin();
@@ -741,10 +741,10 @@ namespace ex01_DataStructure
 			list.Insert(it, data4);
 
 			DoublyLinkedList::ConstIterator cit = list.GetCBegin();
-			const DoublyLinkedList::Node* itNode = *cit;
+			const RecordData itData = *cit;
 
 			//data2の2が入っていればOK
-			EXPECT_EQ(2, (itNode->m_data.m_score));
+			EXPECT_EQ(2, (itData.m_score));
 		}
 
 		/**********************************************************************************//**
@@ -765,11 +765,11 @@ namespace ex01_DataStructure
 			RecordData data5{ 5, "a" };
 
 			//データを最初に5つ入れる
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
-			list.Push_back(data4);
-			list.Push_back(data5);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
+			list.PushBack(data4);
+			list.PushBack(data5);
 
 			//先頭、中央、末尾の要素を削除
 			it = list.GetBegin();
@@ -781,10 +781,10 @@ namespace ex01_DataStructure
 			list.Remove(it);
 
 			DoublyLinkedList::ConstIterator cit = list.GetCBegin();
-			const DoublyLinkedList::Node* itNode = *cit;
+			const RecordData itData = *cit;
 
 			//data2の2が入っていればOK
-			EXPECT_EQ(2, (itNode->m_data.m_score)) << (itNode->m_data.m_score);
+			EXPECT_EQ(2, (itData.m_score)) << (itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -821,14 +821,14 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 
-			RecordData data{ 1, "a" }; 
+			RecordData data{ 1, "a" };
 
-			list.Push_back(data);
+			list.PushBack(data);
 
 			DoublyLinkedList::Iterator it = list.GetEnd();
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 
-			EXPECT_EQ(1, itNode->m_data.m_score);
+			EXPECT_EQ(1, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -841,15 +841,15 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 
 			RecordData data{ 1, "a" };
-			RecordData data2{ 2, "a" }; 
+			RecordData data2{ 2, "a" };
 
-			list.Push_back(data);
-			list.Push_back(data2);
+			list.PushBack(data);
+			list.PushBack(data2);
 
 			DoublyLinkedList::Iterator it = list.GetEnd();
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 
-			EXPECT_EQ(2, itNode->m_data.m_score);
+			EXPECT_EQ(2, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -863,19 +863,19 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			RecordData data{ 1, "a" }; 
-			RecordData data2{ 2, "a" }; 
-			RecordData data3{ 3, "a" }; 
-			RecordData data4{ 4, "a" }; 
+			RecordData data{ 1, "a" };
+			RecordData data2{ 2, "a" };
+			RecordData data3{ 3, "a" };
+			RecordData data4{ 4, "a" };
 			list.Insert(it, data);
 			list.Insert(it, data2);
 			list.Insert(it, data3);
 			list.Insert(it, data4);
 
 			it = list.GetEnd();
-			DoublyLinkedList::Node* itNode = *it;
-			
-			EXPECT_EQ(4, itNode->m_data.m_score);
+			RecordData itData = *it;
+
+			EXPECT_EQ(4, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -888,19 +888,19 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 
-			RecordData data{ 1, "a" }; 
-			RecordData data2{ 2, "a" }; 
-			list.Push_back(data);
-			list.Push_back(data2);
+			RecordData data{ 1, "a" };
+			RecordData data2{ 2, "a" };
+			list.PushBack(data);
+			list.PushBack(data2);
 
 			DoublyLinkedList::Iterator it = list.GetEnd();
 			list.Insert(it, data);
 			list.Remove(it);
 
 			it = list.GetEnd();
-			DoublyLinkedList::Node* itNode = *it;
+			RecordData itData = *it;
 
-			EXPECT_EQ(2, itNode->m_data.m_score);
+			EXPECT_EQ(2, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -913,7 +913,7 @@ namespace ex01_DataStructure
 		{
 			//スキップ
 		}
-		
+
 
 
 		//=================================== 末尾コンストイテレータの取得 ===================================
@@ -942,12 +942,12 @@ namespace ex01_DataStructure
 
 			RecordData data{ 1, "a" };
 
-			list.Push_back(data);
+			list.PushBack(data);
 
 			DoublyLinkedList::ConstIterator it = list.GetCEnd();
-			const DoublyLinkedList::Node* itNode = *it;
+			const RecordData itData = *it;
 
-			EXPECT_EQ(1, itNode->m_data.m_score);
+			EXPECT_EQ(1, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -962,13 +962,13 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 
-			list.Push_back(data);
-			list.Push_back(data2);
+			list.PushBack(data);
+			list.PushBack(data2);
 
 			DoublyLinkedList::ConstIterator it = list.GetCEnd();
-			const DoublyLinkedList::Node* itNode = *it;
+			const RecordData itData = *it;
 
-			EXPECT_EQ(2, itNode->m_data.m_score);
+			EXPECT_EQ(2, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -992,9 +992,9 @@ namespace ex01_DataStructure
 			list.Insert(it, data4);
 
 			DoublyLinkedList::ConstIterator cit = list.GetCEnd();
-			const DoublyLinkedList::Node* itNode = *cit;
+			const RecordData itData = *cit;
 
-			EXPECT_EQ(4, itNode->m_data.m_score);
+			EXPECT_EQ(4, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -1009,17 +1009,17 @@ namespace ex01_DataStructure
 
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
-			list.Push_back(data);
-			list.Push_back(data2);
+			list.PushBack(data);
+			list.PushBack(data2);
 
 			DoublyLinkedList::Iterator it = list.GetEnd();
 			list.Insert(it, data);
 			list.Remove(it);
 
 			DoublyLinkedList::ConstIterator cit = list.GetEnd();
-			const DoublyLinkedList::Node* itNode = *cit;
+			const RecordData itData = *cit;
 
-			EXPECT_EQ(2, itNode->m_data.m_score);
+			EXPECT_EQ(2, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -1058,13 +1058,13 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			RecordData data{ 1, "a" };
-			RecordData data2{ 2, "a" }; 
-			list.Push_back(data);
-			DoublyLinkedList::Iterator it = list.GetBegin(); 
-			DoublyLinkedList::Node* itNode = *it;
-			itNode->m_data = data2;
+			RecordData data2{ 2, "a" };
+			list.PushBack(data);
+			DoublyLinkedList::Iterator it = list.GetBegin();
+			RecordData itData = *it;
+			itData = data2;
 
-			EXPECT_EQ(2, itNode->m_data.m_score);
+			EXPECT_EQ(2, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -1093,7 +1093,7 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::ConstIterator it = list.GetBegin();
-			RecordData data{ 1, "a" }; 
+			RecordData data{ 1, "a" };
 			//*it = data;
 
 			//EXPECT_EQ(true, true);
@@ -1108,7 +1108,7 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::ConstIterator it = list.GetBegin();
-			RecordData data{ 1, "a" }; 
+			RecordData data{ 1, "a" };
 			//*it = data;
 
 			//EXPECT_EQ(true, true);
@@ -1164,20 +1164,20 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetBegin();
-			DoublyLinkedList::Node* node = *it;
+			RecordData itData = *it;
 			++it;
-			DoublyLinkedList::Node* node2 = *it;
+			RecordData itData2 = *it;
 			++it;
-			DoublyLinkedList::Node* node3 = *it;
+			RecordData itData3 = *it;
 
 			bool eq;
-			if (node->m_data.m_score == data.m_score &&
-				node2->m_data.m_score == data2.m_score &&
-				node3->m_data.m_score == data3.m_score)
+			if (itData.m_score == data.m_score &&
+				itData2.m_score == data2.m_score &&
+				itData3.m_score == data3.m_score)
 			{
 				eq = true;
 			}
@@ -1198,20 +1198,20 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetBegin();
-			DoublyLinkedList::Node* node = *it;
+			RecordData itData = *it;
 			++it;
-			DoublyLinkedList::Node* node2 = *it;
+			RecordData itData2 = *it;
 			++it;
-			DoublyLinkedList::Node* node3 = *it;
+			RecordData itData3 = *it;
 
 			bool eq;
-			if (node->m_data.m_score == data.m_score &&
-				node2->m_data.m_score == data2.m_score &&
-				node3->m_data.m_score == data3.m_score)
+			if (itData.m_score == data.m_score &&
+				itData2.m_score == data2.m_score &&
+				itData3.m_score == data3.m_score)
 			{
 				eq = true;
 			}
@@ -1232,20 +1232,20 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetBegin();
-			DoublyLinkedList::Node* node = *it;
-			//it++;
-			DoublyLinkedList::Node* node2 = *it;
-			//it++;
-			DoublyLinkedList::Node* node3 = *it;
+			RecordData itData = *it;
+			it++;
+			RecordData itData2 = *it;
+			it++;
+			RecordData itData3 = *it;
 
 			bool eq;
-			if (node->m_data.m_score == data.m_score &&
-				node2->m_data.m_score == data2.m_score &&
-				node3->m_data.m_score == data3.m_score)
+			if (itData.m_score == data.m_score &&
+				itData2.m_score == data2.m_score &&
+				itData3.m_score == data3.m_score)
 			{
 				eq = true;
 			}
@@ -1253,7 +1253,7 @@ namespace ex01_DataStructure
 
 			EXPECT_EQ(true, eq);
 		}
-		
+
 
 		//===================================イテレータをリストの先頭に向かってひとつ進める===================================
 
@@ -1305,26 +1305,26 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetEnd();
-			DoublyLinkedList::Node* node = *it;
+			RecordData itData = *it;
 			--it;
-			DoublyLinkedList::Node* node2 = *it;
+			RecordData itData2 = *it;
 			--it;
-			DoublyLinkedList::Node* node3 = *it;
+			RecordData itData3 = *it;
 
 			bool eq;
-			if (node->m_data.m_score == data3.m_score &&
-				node2->m_data.m_score == data2.m_score &&
-				node3->m_data.m_score == data.m_score)
+			if (itData.m_score == data3.m_score &&
+				itData2.m_score == data2.m_score &&
+				itData3.m_score == data.m_score)
 			{
 				eq = true;
 			}
 			else eq = false;
 
-			EXPECT_EQ(true, eq) << node3->m_data.m_score;
+			EXPECT_EQ(true, eq) << itData3.m_score;
 		}
 
 		/**********************************************************************************//**
@@ -1339,20 +1339,20 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetEnd();
-			DoublyLinkedList::Node* node = *it;
+			RecordData itData = *it;
 			--it;
-			DoublyLinkedList::Node* node2 = *it;
+			RecordData itData2 = *it;
 			--it;
-			DoublyLinkedList::Node* node3 = *it;
+			RecordData itData3 = *it;
 
 			bool eq;
-			if (node->m_data.m_score == data3.m_score &&
-				node2->m_data.m_score == data2.m_score &&
-				node3->m_data.m_score == data.m_score)
+			if (itData.m_score == data3.m_score &&
+				itData2.m_score == data2.m_score &&
+				itData3.m_score == data.m_score)
 			{
 				eq = true;
 			}
@@ -1373,21 +1373,20 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
-			list.Push_back(data);
-			list.Push_back(data2);
-			list.Push_back(data3);
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetEnd();
-			//it--;
-			DoublyLinkedList::Node* node = *it;
-			//it--;
-			DoublyLinkedList::Node* node2 = *it;
-			//it--;
-			DoublyLinkedList::Node* node3 = *it;
+			RecordData itData = *it;
+			it--;
+			RecordData itData2 = *it;
+			it--;
+			RecordData itData3 = *it;
 
 			bool eq;
-			if (node->m_data.m_score == data.m_score &&
-				node2->m_data.m_score == data2.m_score &&
-				node3->m_data.m_score == data3.m_score)
+			if (itData.m_score == data3.m_score &&
+				itData2.m_score == data2.m_score &&
+				itData3.m_score == data.m_score)
 			{
 				eq = true;
 			}
@@ -1477,8 +1476,8 @@ namespace ex01_DataStructure
 		TEST(IteratorEqualTest, TestEqual)
 		{
 			DoublyLinkedList list;
-			RecordData data{ 1, "a" }; 
-			list.Push_back(data);
+			RecordData data{ 1, "a" };
+			list.PushBack(data);
 			DoublyLinkedList::ConstIterator it = list.GetBegin();
 			DoublyLinkedList::ConstIterator it2 = list.GetBegin();
 
@@ -1494,10 +1493,10 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			RecordData data{ 1, "a" };
-			RecordData data2{ 2, "a" }; 
-			list.Push_back(data);
+			RecordData data2{ 2, "a" };
+			list.PushBack(data);
 			DoublyLinkedList::ConstIterator it = list.GetBegin();
-			list.Push_back(data2);
+			list.PushBack(data2);
 			DoublyLinkedList::ConstIterator it2 = list.GetEnd();
 
 			EXPECT_EQ(false, it == it2);
@@ -1528,8 +1527,8 @@ namespace ex01_DataStructure
 		TEST(IteratorDiffTest, TestDiff)
 		{
 			DoublyLinkedList list;
-			RecordData data{ 1, "a" }; 
-			list.Push_back(data);
+			RecordData data{ 1, "a" };
+			list.PushBack(data);
 			DoublyLinkedList::ConstIterator it = list.GetBegin();
 			DoublyLinkedList::ConstIterator it2 = list.GetBegin();
 
@@ -1545,10 +1544,10 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			RecordData data{ 1, "a" };
-			RecordData data2{ 2, "a" }; 
-			list.Push_back(data);
+			RecordData data2{ 2, "a" };
+			list.PushBack(data);
 			DoublyLinkedList::ConstIterator it = list.GetBegin();
-			list.Push_back(data2);
+			list.PushBack(data2);
 			DoublyLinkedList::ConstIterator it2 = list.GetBegin();
 
 			EXPECT_EQ(true, it != it2);
@@ -1556,7 +1555,7 @@ namespace ex01_DataStructure
 	}
 }
 
-int main(int argc, char **argv) 
+int main(int argc, char **argv)
 {
 	::testing::InitGoogleTest(&argc, argv);
 	RUN_ALL_TESTS();
