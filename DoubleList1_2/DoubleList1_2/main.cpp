@@ -26,7 +26,8 @@ int main()
 		while (inputFile >> score >> name)
 		{
 			DoublyLinkedList::Iterator it = list.GetEnd();
-			list.Insert(it, { score,name });
+			RecordData data = { score,name };
+			list.Insert(it, data);
 			//list.Push_back({ score, name });
 		}
 
