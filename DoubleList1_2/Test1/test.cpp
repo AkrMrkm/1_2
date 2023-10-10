@@ -1,7 +1,7 @@
 //==========================
 //双方向リスト再実装
 //==========================
-//2023/10/06/17:00
+//2023/10/10/14:00
 //作成者:村上輝
 
 #include "pch.h"
@@ -23,7 +23,7 @@ namespace ex01_DataStructure
 		TEST(GetDataNumTest, TestGetDataNumWhenEmpty)
 		{
 			DoublyLinkedList list;
-			EXPECT_EQ(0, list.GetDataNum()) << "データの取得に失敗";
+			EXPECT_EQ(0, list.GetDataNum()) << "リストが空である場合のデータの取得に失敗";
 		}
 
 		/**********************************************************************************//**
@@ -38,7 +38,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			RecordData data{ 1, "a" };
 			ASSERT_TRUE(list.PushBack(data));
-			EXPECT_EQ(1, list.GetDataNum()) << "データの取得に失敗";
+			EXPECT_EQ(1, list.GetDataNum()) << "リスト末尾への挿入を行った際のデータの取得に失敗";
 		}
 
 		/**********************************************************************************//**
@@ -51,10 +51,6 @@ namespace ex01_DataStructure
 		TEST(GetDataNumTest, TestGetDataNumEndPushFailed)
 		{
 			// "末尾への"挿入失敗はメモリ確保失敗時のためここではスキップ
-			//DoublyLinkedList list;
-			//DoublyLinkedList::Iterator it = list.GetEnd();
-			//ASSERT_FALSE(list.Insert(it, 1));
-			//EXPECT_EQ(0, list.GetCount());
 		}
 
 		/**********************************************************************************//**
@@ -69,7 +65,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			RecordData data{ 1, "a" };
 			list.PushBack(data);
-			EXPECT_EQ(1, list.GetDataNum()) << "データの取得に失敗";
+			EXPECT_EQ(1, list.GetDataNum()) << "データの挿入を行った際のデータの取得に失敗";
 		}
 
 		/**********************************************************************************//**
@@ -82,8 +78,7 @@ namespace ex01_DataStructure
 
 		TEST(GetDataNumTest, TestGetDataNumInsertFailed)
 		{
-			//メモリアローケーションエラー
-			//スキップ
+			// 挿入失敗はメモリ確保失敗時のためここではスキップ
 		}
 
 		/**********************************************************************************//**
@@ -103,7 +98,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList::Iterator it = list.GetBegin();
 			list.Remove(it);
 
-			EXPECT_EQ(0, list.GetDataNum()) << list.GetDataNum();
+			EXPECT_EQ(0, list.GetDataNum()) << list.GetDataNum() << "データの削除を行った際のデータの取得に失敗";
 		}
 
 		/**********************************************************************************//**
@@ -116,8 +111,16 @@ namespace ex01_DataStructure
 		*//***********************************************************************************/
 		TEST(GetDataNumTest, TestGetDataNumDeleteFail)
 		{
-			//メモリアローケーションエラー
-			//スキップ
+			DoublyLinkedList list;
+			RecordData data{ 1, "a" };
+
+			DoublyLinkedList::Iterator it = list.GetBegin();
+			
+			list.PushBack(data);
+
+			list.Remove(it);
+
+			EXPECT_EQ(1, list.GetDataNum()) << list.GetDataNum() << "データの削除に失敗した際のデータの取得に失敗";
 		}
 
 		/**********************************************************************************//**
@@ -138,15 +141,21 @@ namespace ex01_DataStructure
 		}
 
 		/**********************************************************************************//**
-			@brief		コンストのメソッドであるか
-			@details	ID:リスト-8\n
+			@brief		データ数の取得機能について、constのメソッドであるかのテスト
+			@details	ID:リスト-8(手動)\n
 						データ数の取得機能のテストです。\n
-						データの削除を行った際の戻り値を確認しています。\n
-						データ数がマイナスでなければ成功です。\n
+						constのメソッドであるかを確認しています。\n
+						有効にしてコンパイルが通れば成功です。\n
+						TT_TEST_GET_DATA_NUM_IS_CONSTマクロを定義すると有効になります。\n
 		*//***********************************************************************************/
-		TEST(GetDataNumTest, TestGetDataConstCheck)
+		TEST(GetDataNumTest, TestGetDataNumWhenConst)
 		{
-			//手動テスト
+#define TT_TEST_GET_DATA_NUM_WHEN_CONST
+#if defined TT_TEST_GET_DATA_NUM_WHEN_CONST
+			const DoublyLinkedList list;
+			EXPECT_EQ(0, list.GetDataNum());
+#endif //TT_TEST_GET_DATA_NUM_WHEN_CONST
+			SUCCEED();
 		}
 
 		//=================================== データの挿入 ===================================
@@ -164,7 +173,6 @@ namespace ex01_DataStructure
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
 			RecordData data{ 1, "a" };
-			list.Insert(it, data);
 
 			EXPECT_EQ(true, list.Insert(it, data));
 		}
@@ -182,7 +190,7 @@ namespace ex01_DataStructure
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
 
-			//ひとつの要素を挿入
+			//要素を挿入
 			list.PushBack(data);
 			list.PushBack(data2);
 			list.PushBack(data3);
@@ -201,6 +209,7 @@ namespace ex01_DataStructure
 		/**********************************************************************************//**
 			@brief		リストに複数の要素がある場合に、末尾イテレータを渡して、挿入した際の挙動テスト
 			@details	ID:リスト-11\n
+						イテレータの指す位置に要素が挿入される\n
 		*//***********************************************************************************/
 		TEST(PushBackTest, TestPushToEnd)
 		{
@@ -210,18 +219,23 @@ namespace ex01_DataStructure
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
 
-			//ひとつの要素を挿入
+			//要素を挿入
 			list.PushBack(data);
 			list.PushBack(data2);
 
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
 			list.Insert(it, data3);
-			it = list.GetBegin();
-			++it;
-			++it;
-			RecordData itData = *it;
 
+			//順番が1,3,2になっていれば成功
+			it = list.GetBegin();
+			RecordData itData = *it;
+			EXPECT_EQ(1, (itData.m_score));
+			++it;
+			itData = *it;
+			EXPECT_EQ(3, (itData.m_score));
+			++it;
+			itData = *it;
 			EXPECT_EQ(2, (itData.m_score));
 		}
 
@@ -239,7 +253,7 @@ namespace ex01_DataStructure
 			RecordData data3{ 3, "a" };
 			RecordData data4{ 4, "a" };
 
-			//ひとつの要素を挿入
+			//要素を挿入
 			list.PushBack(data);
 			list.PushBack(data2);
 			list.PushBack(data3);
@@ -251,32 +265,19 @@ namespace ex01_DataStructure
 
 			list.Insert(it, data4);
 
+			//順番が1243になってたらTRUE
 			it = list.GetBegin();
 			RecordData itData = *it;
-
-			bool eq = false;
-			if (itData.m_score == 1)
-			{
-				++it;
-				itData = *it;
-				if (itData.m_score == 2)
-				{
-					++it;
-					itData = *it;
-					if (itData.m_score == 4)
-					{
-						++it;
-						itData = *it;
-						if (itData.m_score == 3)
-						{
-							eq = true;
-						}
-					}
-				}
-			}
-
-			//順番が1243になってたらTRUE
-			EXPECT_EQ(true, eq) << itData.m_score;
+			EXPECT_EQ(1, (itData.m_score));
+			++it;
+			itData = *it;
+			EXPECT_EQ(2, (itData.m_score));
+			++it;
+			itData = *it;
+			EXPECT_EQ(4, (itData.m_score));
+			++it;
+			itData = *it;
+			EXPECT_EQ(3, (itData.m_score));
 		}
 
 		/**********************************************************************************//**
@@ -286,29 +287,90 @@ namespace ex01_DataStructure
 		*//***********************************************************************************/
 		TEST(PushBackTest, TestPushToOtherConst)
 		{
+			DoublyLinkedList list;
 
+			RecordData data{ 1, "a" };
+			RecordData data2{ 2, "a" };
+			RecordData data3{ 3, "a" };
+			RecordData data4{ 4, "a" };
+
+			//要素を挿入
+			list.PushBack(data);
+			list.PushBack(data2);
+			list.PushBack(data3);
+
+			// 3番目の前に入れる
+			DoublyLinkedList::ConstIterator it = list.GetBegin();
+			++it;
+			++it;
+
+			list.Insert(it, data4);
+
+			//順番が1243になってたらTRUE
+			it = list.GetBegin();
+			RecordData itData = *it;
+			EXPECT_EQ(1, (itData.m_score));
+			++it;
+			itData = *it;
+			EXPECT_EQ(2, (itData.m_score));
+			++it;
+			itData = *it;
+			EXPECT_EQ(4, (itData.m_score));
+			++it;
+			itData = *it;
+			EXPECT_EQ(3, (itData.m_score));
 		}
 
 		/**********************************************************************************//**
 			@brief		不正なイテレータを渡して、挿入した場合の挙動テスト
 			@details	ID:リスト-14\n
-						TRUEで成功\n
+						リストの参照が無いイテレータを渡した際の挙動など\n
+						何も起こらなければ成功\n
 		*//***********************************************************************************/
 		TEST(PushBackTest, TestPushToUnknownIt)
 		{
+			DoublyLinkedList list;
 
+			RecordData data{ 1, "a" };
+			RecordData data2{ 2, "a" };
+			list.PushBack(data); // 要素をひとつ挿入
+
+			//先頭イテレータより前のイテレータという不正なイテレータを作る
+			DoublyLinkedList::Iterator it = list.GetBegin();
+			--it;
+			list.Insert(it, data);
+			//データ数が変わっていなければ成功
+			EXPECT_EQ(1, (list.GetDataNum()));
+
+
+			//リスト２のイテレータをリスト１に渡して挿入したとき(別のリストを参照したとき)
+			DoublyLinkedList list2;
+			list2.PushBack(data2);
+			it = list2.GetBegin();
+			list.Insert(it, data2);
+			//データ数が変わっていなければ成功
+			EXPECT_EQ(1, (list.GetDataNum()));
 		}
 
 		/**********************************************************************************//**
-			@brief		非constのメソッドであるか
-			@details	ID:リスト-15\n
-						TRUEで成功\n
+			@brief		リスト末尾のデータ追加について、非constが保障されているかのテスト
+			@details	ID:リスト-15(手動)\n
+						リスト末尾のデータ追加テストです。\n
+						非constが保障されているかを確認しています。\n
+						有効にしてコンパイルエラーになれば成功です。\n
+						TT_TEST_PUSH_IS_NOT_CONSTマクロを定義すると有効になります。\n
 		*//***********************************************************************************/
-		TEST(PushBackTest, TestPushToUnConst)
+		TEST(ListManualTest, TestInsertWhenConst)
 		{
-
+//#define TT_TEST_INSERT_WHEN_CONST
+#if defined TT_TEST_INSERT_WHEN_CONST
+			const DoublyLinkedList list;
+			DoublyLinkedList::ConstIterator it = list.GetCBegin();
+			RecordData data{ 1, "a" };
+			list.Insert(it, data);//ここでエラー
+#endif //TT_TEST_INSERT_WHEN_CONST
+			SUCCEED();
 		}
-
 
 		//=================================== データの削除 ===================================
 
@@ -320,22 +382,18 @@ namespace ex01_DataStructure
 		TEST(RemoveTest, TestRemoveToEmpty)
 		{
 			DoublyLinkedList list;
+
 			DoublyLinkedList::Iterator it = list.GetBegin();
+			EXPECT_EQ(false, list.Remove(it));
 
-			bool isBegin, isEnd;
-
-			isBegin = list.Remove(it);
 			it = list.GetEnd();
-			isEnd = list.Remove(it);
-
-			bool bothOK = (isBegin == isEnd == false);
-
-			EXPECT_EQ(false, bothOK);
+			EXPECT_EQ(false, list.Remove(it));
 		}
 
 		/**********************************************************************************//**
 			@brief		リストに複数の要素がある場合に、先頭イテレータを渡して、削除した際の挙動
 			@details	ID:リスト-17\n
+						先頭要素の削除\n
 						TRUEで成功\n
 		*//***********************************************************************************/
 		TEST(RemoveTest, TestRemoveToBegin)
@@ -346,7 +404,7 @@ namespace ex01_DataStructure
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
 
-			//ひとつの要素を挿入
+			//要素を挿入
 			list.PushBack(data);
 			list.PushBack(data2);
 			list.PushBack(data3);
@@ -354,10 +412,13 @@ namespace ex01_DataStructure
 			DoublyLinkedList::Iterator it = list.GetBegin();
 			list.Remove(it);
 
+			//先頭要素がなくなっていれば成功
 			it = list.GetBegin();
 			RecordData itData = *it;
-
 			EXPECT_EQ(2, (itData.m_score));
+			++it;
+			itData = *it;
+			EXPECT_EQ(3, (itData.m_score));
 		}
 
 		/**********************************************************************************//**
@@ -373,7 +434,7 @@ namespace ex01_DataStructure
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
 
-			//ひとつの要素を挿入
+			//要素を挿入
 			list.PushBack(data);
 			list.PushBack(data2);
 			list.PushBack(data3);
@@ -383,6 +444,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList::Iterator it = list.GetEnd();
 			list.Remove(it);
 
+			//要素数が変わっていなければ成功
 			EXPECT_EQ(false, (oldNum != list.GetDataNum())) << oldNum << list.GetDataNum();
 		}
 
@@ -400,7 +462,7 @@ namespace ex01_DataStructure
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
 
-			//ひとつの要素を挿入
+			//要素を挿入
 			list.PushBack(data);
 			list.PushBack(data2);
 			list.PushBack(data3);
@@ -412,19 +474,12 @@ namespace ex01_DataStructure
 
 			it = list.GetBegin();
 			RecordData itData = *it;
-			bool eq = false;
-			if (itData.m_score == 1)
-			{
-				++it;
-				itData = *it;
-				if (itData.m_score == 3)
-				{
-					eq = true;
-				}
-			}
 
-			//先頭だった要素が二番目になっていたらtrue
-			EXPECT_EQ(true, eq);
+			//順番が1,3になっていれば成功
+			EXPECT_EQ(1, itData.m_score);
+			++it;
+			itData = *it;
+			EXPECT_EQ(3, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -441,31 +496,24 @@ namespace ex01_DataStructure
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
 
-			//ひとつの要素を挿入
+			//要素を挿入
 			list.PushBack(data);
 			list.PushBack(data2);
 			list.PushBack(data3);
 
-			DoublyLinkedList::ConstIterator it = list.GetCBegin();
+			DoublyLinkedList::ConstIterator it = list.GetBegin();
 			++it;
 			// 2番目を削除
 			list.Remove(it);
 
 			it = list.GetBegin();
 			RecordData itData = *it;
-			bool eq = false;
-			if (itData.m_score == 1)
-			{
-				++it;
-				itData = *it;
-				if (itData.m_score == 3)
-				{
-					eq = true;
-				}
-			}
 
-			//先頭だった要素が二番目になっていたらtrue
-			EXPECT_EQ(true, eq) << "	[ConstIteratorを指定して削除] <- わからない";
+			//順番が1,3になっていれば成功
+			EXPECT_EQ(1, itData.m_score);
+			++it;
+			itData = *it;
+			EXPECT_EQ(3, itData.m_score);
 		}
 		/**********************************************************************************//**
 			@brief		不正なイテレータを渡して、削除した場合の挙動
@@ -482,7 +530,7 @@ namespace ex01_DataStructure
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
 
-			//ひとつの要素を挿入
+			//要素を挿入
 			list.PushBack(data);
 			list.PushBack(data2);
 			list.PushBack(data3);
@@ -495,19 +543,25 @@ namespace ex01_DataStructure
 
 			list.Remove(it);
 
-			EXPECT_EQ(false, false);
+			//データの総数が変わっていなければ成功
+			EXPECT_EQ(oldNum, list.GetDataNum());
 		}
 
 		/**********************************************************************************//**
 			@brief		非constのメソッドであるか
-			@details	ID:リスト-22\n
-						リストの参照がないイテレータ、別リストの要素を指すイテレータを渡した際の挙動など\n
-						何も起こらない\n
-						FALSEで成功\n
+			@details	ID:リスト-22\
+						
+						コンパイルエラーで成功\n
 		*//***********************************************************************************/
-		TEST(RemoveTest, TestRemoveToUnConst)
+		TEST(RemoveTest, TestRemoveToWhenConst)
 		{
-			// 非constか
+			//#define TT_TEST_REMOVE_WHEN_CONST
+#if defined TT_TEST_REMOVE_WHEN_CONST
+			const DoublyLinkedList list;
+			DoublyLinkedList::ConstIterator it = list.GetCBegin();
+			list.Remove(it); // ここでエラー
+#endif //TT_TEST_REMOVE_WHEN_CONST
+			SUCCEED();
 		}
 
 
@@ -582,22 +636,35 @@ namespace ex01_DataStructure
 
 			//データを最初に一つ入れる
 			list.PushBack(data);
+			DoublyLinkedList::Iterator it = list.GetBegin();
+			RecordData itData = *it;
+			//data2の1が入っていればOK
+			EXPECT_EQ(1, (itData.m_score));
 
 			//先頭に入れる
-			DoublyLinkedList::Iterator it = list.GetBegin();
+			it = list.GetBegin();
 			list.Insert(it, data2);
+			//data2の2が入っていればOK
+			it = list.GetBegin();
+			itData = *it;
+			EXPECT_EQ(2, (itData.m_score));
 
 			//先頭から2番目に入れる(中央)
 			it = list.GetBegin();
 			++it;
 			list.Insert(it, data3);
+			itData = *it;
+			//data2の2が入っていればOK
+			it = list.GetBegin();
+			itData = *it;
+			EXPECT_EQ(2, (itData.m_score));
 
 			//末尾に入れる
 			it = list.GetEnd();
 			list.Insert(it, data4);
-
+			
 			it = list.GetBegin();
-			RecordData itData = *it;
+			itData = *it;
 
 			//data2の2が入っていればOK
 			EXPECT_EQ(2, (itData.m_score));
@@ -631,14 +698,23 @@ namespace ex01_DataStructure
 			it = list.GetBegin();
 			list.Remove(it);
 			it = list.GetBegin();
-			++it;
-			list.Remove(it);
-			it = list.GetEnd();
-			list.Remove(it);
+			RecordData itData = *it;
+			//data2の2が入っていればOK
+			EXPECT_EQ(2, (itData.m_score)) << (itData.m_score);
+
 
 			it = list.GetBegin();
-			RecordData itData = *it;
+			++it;
+			list.Remove(it);
+			it = list.GetBegin();
+			itData = *it;
+			//data2の2が入っていればOK
 
+			EXPECT_EQ(2, (itData.m_score)) << (itData.m_score);
+			it = list.GetEnd();
+			list.Remove(it);
+			it = list.GetBegin();
+			itData = *it;
 			//data2の2が入っていればOK
 			EXPECT_EQ(2, (itData.m_score)) << (itData.m_score);
 		}
@@ -646,12 +722,16 @@ namespace ex01_DataStructure
 		/**********************************************************************************//**
 			@brief		constのリストから、ConstIteratorでないIteratorの取得が行えないかをチェック
 			@details	ID:リスト-28\n
-						先頭要素を指すイテレータが返る\n
-						要素列の先頭、中央、末尾に挿入を行った場合の各ケースについてチェックすること\n
+						コンパイルエラーで成功\n
 		*//***********************************************************************************/
 		TEST(GetBegin, TestGetBeginItConst)
 		{
-			//スキップ
+			//#define TT_TEST_BEGIN_WHEN_NO_CONST
+#if defined TT_TEST_BEGIN_WHEN_NO_CONST
+			const DoublyLinkedList list;
+			DoublyLinkedList::Iterator it = list.GetBegin();// ここでエラー
+#endif //TT_TEST_BEGIN_WHEN_NO_CONST
+			SUCCEED();
 		}
 
 
@@ -727,22 +807,35 @@ namespace ex01_DataStructure
 
 			//データを最初に一つ入れる
 			list.PushBack(data);
+			DoublyLinkedList::ConstIterator it = list.GetCBegin();
+			RecordData itData = *it;
+			//data2の1が入っていればOK
+			EXPECT_EQ(1, (itData.m_score));
 
 			//先頭に入れる
-			DoublyLinkedList::Iterator it = list.GetBegin();
+			it = list.GetCBegin();
 			list.Insert(it, data2);
+			//data2の2が入っていればOK
+			it = list.GetCBegin();
+			itData = *it;
+			EXPECT_EQ(2, (itData.m_score));
 
 			//先頭から2番目に入れる(中央)
-			it = list.GetBegin();
+			it = list.GetCBegin();
 			++it;
 			list.Insert(it, data3);
+			itData = *it;
+			//data2の2が入っていればOK
+			it = list.GetCBegin();
+			itData = *it;
+			EXPECT_EQ(2, (itData.m_score));
 
 			//末尾に入れる
-			it = list.GetEnd();
+			it = list.GetCEnd();
 			list.Insert(it, data4);
 
-			DoublyLinkedList::ConstIterator cit = list.GetCBegin();
-			const RecordData itData = *cit;
+			it = list.GetCBegin();
+			itData = *it;
 
 			//data2の2が入っていればOK
 			EXPECT_EQ(2, (itData.m_score));
@@ -757,7 +850,7 @@ namespace ex01_DataStructure
 		TEST(GetBeginConst, TestGetBeginItAfterRemove)
 		{
 			DoublyLinkedList list;
-			DoublyLinkedList::Iterator it = list.GetBegin();
+			DoublyLinkedList::ConstIterator it = list.GetCBegin();
 
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
@@ -773,17 +866,26 @@ namespace ex01_DataStructure
 			list.PushBack(data5);
 
 			//先頭、中央、末尾の要素を削除
-			it = list.GetBegin();
+			it = list.GetCBegin();
 			list.Remove(it);
-			it = list.GetBegin();
+			it = list.GetCBegin();
+			RecordData itData = *it;
+			//data2の2が入っていればOK
+			EXPECT_EQ(2, (itData.m_score)) << (itData.m_score);
+
+
+			it = list.GetCBegin();
 			++it;
 			list.Remove(it);
-			it = list.GetEnd();
+			it = list.GetCBegin();
+			itData = *it;
+			//data2の2が入っていればOK
+
+			EXPECT_EQ(2, (itData.m_score)) << (itData.m_score);
+			it = list.GetCEnd();
 			list.Remove(it);
-
-			DoublyLinkedList::ConstIterator cit = list.GetCBegin();
-			const RecordData itData = *cit;
-
+			it = list.GetCBegin();
+			itData = *it;
 			//data2の2が入っていればOK
 			EXPECT_EQ(2, (itData.m_score)) << (itData.m_score);
 		}
@@ -791,12 +893,17 @@ namespace ex01_DataStructure
 		/**********************************************************************************//**
 			@brief		constのメソッドであるか
 			@details	ID:リスト-34\n
+						コンパイルエラーが通れば成功\n
 		*//***********************************************************************************/
 		TEST(GetBeginConst, TestGetBeginItConst)
 		{
-			//スキップ
+#define TT_TEST_BEGIN_WHEN_CONST
+#if defined TT_TEST_BEGIN_WHEN_CONST
+			const DoublyLinkedList list;
+			DoublyLinkedList::ConstIterator it = list.GetCBegin();// ここでエラー
+#endif //TT_TEST_BEGIN_WHEN_CONST
+			SUCCEED();
 		}
-
 
 		//=================================== 末尾イテレータの取得 ===================================
 
@@ -868,15 +975,31 @@ namespace ex01_DataStructure
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
 			RecordData data4{ 4, "a" };
-			list.Insert(it, data);
-			list.Insert(it, data2);
-			list.Insert(it, data3);
-			list.Insert(it, data4);
 
+			list.Insert(it, data);
 			it = list.GetEnd();
 			RecordData itData = *it;
+			EXPECT_EQ(1, itData.m_score); // 末尾が1だったら成功
 
-			EXPECT_EQ(4, itData.m_score);
+			it = list.GetBegin(); // 先頭に挿入
+			list.Insert(it, data2);
+			it = list.GetEnd();
+			itData = *it;
+			EXPECT_EQ(1, itData.m_score); // 末尾が1だったら成功
+
+			it = list.GetBegin();// 中間に挿入
+			++it;
+			list.Insert(it, data3);
+			it = list.GetEnd();
+			itData = *it;
+			EXPECT_EQ(1, itData.m_score); // 末尾が1だったら成功
+
+
+			it = list.GetEnd();// 末尾に挿入
+			list.Insert(it, data4);
+			it = list.GetEnd();
+			itData = *it;
+			EXPECT_EQ(1, itData.m_score); // 末尾が3だったら成功
 		}
 
 		/**********************************************************************************//**
@@ -891,28 +1014,46 @@ namespace ex01_DataStructure
 
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
+			RecordData data3{ 3, "a" };
+			RecordData data4{ 4, "a" };
 			list.PushBack(data);
 			list.PushBack(data2);
+			list.PushBack(data3);
+			list.PushBack(data4);
 
-			DoublyLinkedList::Iterator it = list.GetEnd();
-			list.Insert(it, data);
+			DoublyLinkedList::Iterator it = list.GetBegin(); //先頭を削除
 			list.Remove(it);
-
 			it = list.GetEnd();
 			RecordData itData = *it;
+			EXPECT_EQ(4, itData.m_score);
 
-			EXPECT_EQ(2, itData.m_score);
+			it = list.GetBegin(); //先頭から2番目を削除
+			++it;
+			list.Remove(it);
+			it = list.GetEnd();
+			itData = *it;
+			EXPECT_EQ(4, itData.m_score);
+
+			it = list.GetEnd(); //末尾を削除
+			list.Remove(it);
+			it = list.GetEnd();
+			itData = *it;
+			EXPECT_EQ(4, itData.m_score); // 末尾イテレータを削除しても変わらない
 		}
 
 		/**********************************************************************************//**
 			@brief		constのリストから、ConstIteratorでないIteratorの取得が行えないかをチェック
 			@details	ID:リスト-40\n
-						末尾要素を指すイテレータが返る\n
-						要素列の先頭、中央、末尾に挿入を行った場合の各ケースについてチェックすること\n
+						コンパイルエラーで成功\n
 		*//***********************************************************************************/
 		TEST(GetEndTest, TestGetEndItConst)
 		{
-			//スキップ
+			//#define TT_TEST_END_WHEN_NO_CONST
+#if defined TT_TEST_END_WHEN_NO_CONST
+			const DoublyLinkedList list;
+			DoublyLinkedList::Iterator it = list.GetEnd();// ここでエラー
+#endif //TT_TEST_END_WHEN_NO_CONST
+			SUCCEED();
 		}
 
 
@@ -981,21 +1122,37 @@ namespace ex01_DataStructure
 		TEST(GetEndTestConst, TestGetEndItAfterInsert)
 		{
 			DoublyLinkedList list;
-			DoublyLinkedList::Iterator it = list.GetEnd();
+			DoublyLinkedList::ConstIterator it = list.GetCEnd();
 
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 			RecordData data3{ 3, "a" };
 			RecordData data4{ 4, "a" };
+
 			list.Insert(it, data);
+			it = list.GetCEnd();
+			RecordData itData = *it;
+			EXPECT_EQ(1, itData.m_score); // 末尾が1だったら成功
+
+			it = list.GetCBegin(); // 先頭に挿入
 			list.Insert(it, data2);
+			it = list.GetCEnd();
+			itData = *it;
+			EXPECT_EQ(1, itData.m_score); // 末尾が1だったら成功
+
+			it = list.GetCBegin();// 中間に挿入
+			++it;
 			list.Insert(it, data3);
+			it = list.GetCEnd();
+			itData = *it;
+			EXPECT_EQ(1, itData.m_score); // 末尾が1だったら成功
+
+
+			it = list.GetCEnd();// 末尾に挿入
 			list.Insert(it, data4);
-
-			DoublyLinkedList::ConstIterator cit = list.GetCEnd();
-			const RecordData itData = *cit;
-
-			EXPECT_EQ(4, itData.m_score);
+			it = list.GetCEnd();
+			itData = *it;
+			EXPECT_EQ(1, itData.m_score); // 末尾が3だったら成功
 		}
 
 		/**********************************************************************************//**
@@ -1010,26 +1167,46 @@ namespace ex01_DataStructure
 
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
+			RecordData data3{ 3, "a" };
+			RecordData data4{ 4, "a" };
 			list.PushBack(data);
 			list.PushBack(data2);
+			list.PushBack(data3);
+			list.PushBack(data4);
 
-			DoublyLinkedList::Iterator it = list.GetEnd();
-			list.Insert(it, data);
+			DoublyLinkedList::ConstIterator it = list.GetCBegin(); //先頭を削除
 			list.Remove(it);
+			it = list.GetCEnd();
+			RecordData itData = *it;
+			EXPECT_EQ(4, itData.m_score);
 
-			DoublyLinkedList::ConstIterator cit = list.GetEnd();
-			const RecordData itData = *cit;
+			it = list.GetCBegin(); //先頭から2番目を削除
+			++it;
+			list.Remove(it);
+			it = list.GetCEnd();
+			itData = *it;
+			EXPECT_EQ(4, itData.m_score);
 
-			EXPECT_EQ(2, itData.m_score);
+			it = list.GetCEnd(); //末尾を削除
+			list.Remove(it);
+			it = list.GetCEnd();
+			itData = *it;
+			EXPECT_EQ(4, itData.m_score); // 末尾イテレータを削除しても変わらない
 		}
 
 		/**********************************************************************************//**
 			@brief		constのメソッドであるか
 			@details	ID:リスト-46\n
+						コンパイルが通れば成功\n
 		*//***********************************************************************************/
 		TEST(GetEndTestConst, TestGetEndItConst)
 		{
-			//スキップ
+#define TT_TEST_END_WHEN_CONST
+#if defined TT_TEST_END_WHEN_CONST
+			const DoublyLinkedList list;
+			DoublyLinkedList::ConstIterator it = list.GetCEnd();
+#endif //TT_TEST_END_WHEN_CONST
+			SUCCEED();
 		}
 
 	}
@@ -1047,7 +1224,9 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetBegin();
 
-			EXPECT_EQ(true, it == nullptr);
+			RecordData itData = *it;
+
+			EXPECT_EQ(true, it == nullptr) << "[Assert発生で成功]";
 		}
 
 		/**********************************************************************************//**
@@ -1075,14 +1254,17 @@ namespace ex01_DataStructure
 		*//***********************************************************************************/
 		TEST(IteratorGetTest, TestAssignItConst)
 		{
+		}
+		TEST(GetEndTestConst, TestGetEndItConst)
+		{
+//#define TT_TEST_ITE_ASSIGN_CONST
+#if defined TT_TEST_ITE_ASSIGN_CONST
 			DoublyLinkedList list;
 			DoublyLinkedList::ConstIterator it = list.GetBegin();
 			RecordData data{ 1, "a" };
-			RecordData data2{ 2, "a" };
-			RecordData data3{ 3, "a" };
-			//*it = data;
-
-			//EXPECT_EQ(true, false);
+			*it = data;
+#endif //TT_TEST_ITE_ASSIGN_CONST
+			SUCCEED();
 		}
 
 		/**********************************************************************************//**
@@ -1093,11 +1275,11 @@ namespace ex01_DataStructure
 		TEST(IteratorGetTest, TestEmptyBegin)
 		{
 			DoublyLinkedList list;
-			DoublyLinkedList::ConstIterator it = list.GetBegin();
-			RecordData data{ 1, "a" };
-			//*it = data;
+			DoublyLinkedList::Iterator it = list.GetBegin();
 
-			//EXPECT_EQ(true, true);
+			RecordData itData = *it;
+
+			EXPECT_EQ(true, it == nullptr) << "[Assert発生で成功]";
 		}
 
 		/**********************************************************************************//**
@@ -1108,11 +1290,11 @@ namespace ex01_DataStructure
 		TEST(IteratorGetTest, TestEmptyEnd)
 		{
 			DoublyLinkedList list;
-			DoublyLinkedList::ConstIterator it = list.GetBegin();
-			RecordData data{ 1, "a" };
-			//*it = data;
+			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			//EXPECT_EQ(true, true);
+			RecordData itData = *it;
+
+			EXPECT_EQ(true, it == nullptr) << "[Assert発生で成功]";
 		}
 
 		//===================================イテレータをリストの末尾に向かってひとつ進める===================================
@@ -1126,7 +1308,7 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetBegin();
-			//++it;
+			++it;
 		}
 
 		/**********************************************************************************//**
@@ -1138,7 +1320,7 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetBegin();
-			//++it;
+			++it;
 		}
 
 		/**********************************************************************************//**
@@ -1150,7 +1332,7 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
-			//++it;
+			++it;
 		}
 
 		/**********************************************************************************//**
@@ -1170,21 +1352,13 @@ namespace ex01_DataStructure
 			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetBegin();
 			RecordData itData = *it;
+			EXPECT_EQ(1, itData.m_score);
 			++it;
-			RecordData itData2 = *it;
+			itData = *it;
+			EXPECT_EQ(2, itData.m_score);
 			++it;
-			RecordData itData3 = *it;
-
-			bool eq;
-			if (itData.m_score == data.m_score &&
-				itData2.m_score == data2.m_score &&
-				itData3.m_score == data3.m_score)
-			{
-				eq = true;
-			}
-			else eq = false;
-
-			EXPECT_EQ(true, eq);
+			itData = *it;
+			EXPECT_EQ(3, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -1204,21 +1378,13 @@ namespace ex01_DataStructure
 			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetBegin();
 			RecordData itData = *it;
+			EXPECT_EQ(1, itData.m_score);
 			++it;
-			RecordData itData2 = *it;
+			itData = *it;
+			EXPECT_EQ(2, itData.m_score);
 			++it;
-			RecordData itData3 = *it;
-
-			bool eq;
-			if (itData.m_score == data.m_score &&
-				itData2.m_score == data2.m_score &&
-				itData3.m_score == data3.m_score)
-			{
-				eq = true;
-			}
-			else eq = false;
-
-			EXPECT_EQ(true, eq);
+			itData = *it;
+			EXPECT_EQ(3, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -1238,21 +1404,13 @@ namespace ex01_DataStructure
 			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetBegin();
 			RecordData itData = *it;
+			EXPECT_EQ(1, itData.m_score);
 			it++;
-			RecordData itData2 = *it;
+			itData = *it;
+			EXPECT_EQ(2, itData.m_score);
 			it++;
-			RecordData itData3 = *it;
-
-			bool eq;
-			if (itData.m_score == data.m_score &&
-				itData2.m_score == data2.m_score &&
-				itData3.m_score == data3.m_score)
-			{
-				eq = true;
-			}
-			else eq = false;
-
-			EXPECT_EQ(true, eq);
+			itData = *it;
+			EXPECT_EQ(3, itData.m_score);
 		}
 
 
@@ -1267,7 +1425,7 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
-			//--it;
+			--it;
 		}
 
 		/**********************************************************************************//**
@@ -1279,7 +1437,7 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
-			//--it;
+			--it;
 		}
 
 		/**********************************************************************************//**
@@ -1291,7 +1449,7 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
-			//--it;
+			--it;
 		}
 
 		/**********************************************************************************//**
@@ -1311,21 +1469,13 @@ namespace ex01_DataStructure
 			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetEnd();
 			RecordData itData = *it;
+			EXPECT_EQ(3, itData.m_score);
 			--it;
-			RecordData itData2 = *it;
-			--it;
-			RecordData itData3 = *it;
-
-			bool eq;
-			if (itData.m_score == data3.m_score &&
-				itData2.m_score == data2.m_score &&
-				itData3.m_score == data.m_score)
-			{
-				eq = true;
-			}
-			else eq = false;
-
-			EXPECT_EQ(true, eq) << itData3.m_score;
+			itData = *it;
+			EXPECT_EQ(2, itData.m_score);
+			--it; 
+			itData = *it;
+			EXPECT_EQ(1, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -1345,21 +1495,13 @@ namespace ex01_DataStructure
 			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetEnd();
 			RecordData itData = *it;
+			EXPECT_EQ(3, itData.m_score);
 			--it;
-			RecordData itData2 = *it;
+			itData = *it;
+			EXPECT_EQ(2, itData.m_score);
 			--it;
-			RecordData itData3 = *it;
-
-			bool eq;
-			if (itData.m_score == data3.m_score &&
-				itData2.m_score == data2.m_score &&
-				itData3.m_score == data.m_score)
-			{
-				eq = true;
-			}
-			else eq = false;
-
-			EXPECT_EQ(true, eq);
+			itData = *it;
+			EXPECT_EQ(1, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -1379,21 +1521,13 @@ namespace ex01_DataStructure
 			list.PushBack(data3);
 			DoublyLinkedList::Iterator it = list.GetEnd();
 			RecordData itData = *it;
+			EXPECT_EQ(3, itData.m_score);
 			it--;
-			RecordData itData2 = *it;
+			itData = *it;
+			EXPECT_EQ(2, itData.m_score);
 			it--;
-			RecordData itData3 = *it;
-
-			bool eq;
-			if (itData.m_score == data3.m_score &&
-				itData2.m_score == data2.m_score &&
-				itData3.m_score == data.m_score)
-			{
-				eq = true;
-			}
-			else eq = false;
-
-			EXPECT_EQ(true, eq);
+			itData = *it;
+			EXPECT_EQ(1, itData.m_score);
 		}
 
 		//===================================イテレータのコピーを行う===================================
@@ -1405,9 +1539,13 @@ namespace ex01_DataStructure
 		*//***********************************************************************************/
 		TEST(IteratorCopyTest, TestConstError)
 		{
+			//#define TT_TEST_COPY_WHEN_CONST
+#if defined TT_TEST_COPY_WHEN_CONST
 			DoublyLinkedList list;
 			DoublyLinkedList::ConstIterator cit = list.GetBegin();
-			//DoublyLinkedList::Iterator cit = cit;
+			DoublyLinkedList::Iterator cit = cit;
+#endif //TT_TEST_COPY_WHEN_CONST
+			SUCCEED();
 		}
 
 		/**********************************************************************************//**
@@ -1418,10 +1556,14 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetBegin();
+			RecordData data{ 1, "a" };
+			list.PushBack(data);
+			it = list.GetBegin();
 			DoublyLinkedList::Iterator it2 = it;
-			//DoublyLinkedList::Iterator cit = cit;
+			RecordData itData = *it;
+			RecordData itData2 = *it2;
 
-			EXPECT_EQ(true, it == it2);
+			EXPECT_EQ(true, itData.m_score == itData2.m_score);
 		}
 
 
@@ -1434,9 +1576,14 @@ namespace ex01_DataStructure
 		*//***********************************************************************************/
 		TEST(IteratorAssignTest, TestConstError)
 		{
+			//#define TT_TEST_ASSIGN_WHEN_CONST
+#if defined TT_TEST_ASSIGN_WHEN_CONST
 			DoublyLinkedList list;
 			DoublyLinkedList::ConstIterator cit = list.GetBegin();
-			//DoublyLinkedList::Iterator it = cit;
+			DoublyLinkedList::Iterator it = list.GetBegin();
+			it = cit; // ここでエラー
+#endif //TT_TEST_ASSIGN_WHEN_CONST
+			SUCCEED();
 		}
 
 		/**********************************************************************************//**
@@ -1447,9 +1594,15 @@ namespace ex01_DataStructure
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetBegin();
-			DoublyLinkedList::Iterator it2 = it;
+			RecordData data{ 1, "a" };
+			list.PushBack(data);
+			it = list.GetBegin();
+			DoublyLinkedList::Iterator it2 = list.GetBegin();
+			it2 = it;
+			RecordData itData = *it;
+			RecordData itData2 = *it2;
 
-			EXPECT_EQ(true, it == it2);
+			EXPECT_EQ(true, itData.m_score == itData2.m_score);
 		}
 
 
@@ -1458,13 +1611,13 @@ namespace ex01_DataStructure
 		/**********************************************************************************//**
 			@brief		リストが空の状態での先頭イテレータと末尾イテレータを比較した際の挙動をチェック
 			@details	ID:リスト-21\n
-						コンパイルエラーになることを確認する。自動テスト化しなくてよい。\n
+						TRUEで成功\n
 		*//***********************************************************************************/
 		TEST(IteratorEqualTest, TestEqualEmpty)
 		{
 			DoublyLinkedList list;
-			DoublyLinkedList::ConstIterator it = list.GetBegin();
-			DoublyLinkedList::ConstIterator it2 = list.GetEnd();
+			DoublyLinkedList::Iterator it = list.GetBegin();
+			DoublyLinkedList::Iterator it2 = list.GetEnd();
 
 			EXPECT_EQ(true, it == it2);
 		}
@@ -1479,8 +1632,8 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			RecordData data{ 1, "a" };
 			list.PushBack(data);
-			DoublyLinkedList::ConstIterator it = list.GetBegin();
-			DoublyLinkedList::ConstIterator it2 = list.GetBegin();
+			DoublyLinkedList::Iterator it = list.GetBegin();
+			DoublyLinkedList::Iterator it2 = list.GetBegin();
 
 			EXPECT_EQ(true, it == it2);
 		}
@@ -1496,9 +1649,9 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 			list.PushBack(data);
-			DoublyLinkedList::ConstIterator it = list.GetBegin();
+			DoublyLinkedList::Iterator it = list.GetBegin();
 			list.PushBack(data2);
-			DoublyLinkedList::ConstIterator it2 = list.GetEnd();
+			DoublyLinkedList::Iterator it2 = list.GetEnd();
 
 			EXPECT_EQ(false, it == it2);
 		}
@@ -1509,13 +1662,12 @@ namespace ex01_DataStructure
 		/**********************************************************************************//**
 			@brief		リストが空の状態での先頭イテレータと末尾イテレータを比較した際の挙動をチェック
 			@details	ID:リスト-24\n
-						コンパイルエラーになることを確認する。自動テスト化しなくてよい。\n
 		*//***********************************************************************************/
 		TEST(IteratorDiffTest, TestDiffEmpty)
 		{
 			DoublyLinkedList list;
-			DoublyLinkedList::ConstIterator it = list.GetBegin();
-			DoublyLinkedList::ConstIterator it2 = list.GetEnd();
+			DoublyLinkedList::Iterator it = list.GetBegin();
+			DoublyLinkedList::Iterator it2 = list.GetEnd();
 
 			EXPECT_EQ(true, it != it2);
 		}
@@ -1523,15 +1675,14 @@ namespace ex01_DataStructure
 		/**********************************************************************************//**
 			@brief		同一のイテレータを比較した際の挙動
 			@details	ID:リスト-25\n
-						FALSEで成功\n
 		*//***********************************************************************************/
 		TEST(IteratorDiffTest, TestDiff)
 		{
 			DoublyLinkedList list;
 			RecordData data{ 1, "a" };
 			list.PushBack(data);
-			DoublyLinkedList::ConstIterator it = list.GetBegin();
-			DoublyLinkedList::ConstIterator it2 = list.GetBegin();
+			DoublyLinkedList::Iterator it = list.GetBegin();
+			DoublyLinkedList::Iterator it2 = list.GetBegin();
 
 			EXPECT_EQ(true, it != it2);
 		}
@@ -1539,7 +1690,6 @@ namespace ex01_DataStructure
 		/**********************************************************************************//**
 			@brief		異なるイテレータを比較した際の挙動
 			@details	ID:リスト-26\n
-						TRUEで成功\n
 		*//***********************************************************************************/
 		TEST(IteratorDiffTest, TestDiffDiff)
 		{
@@ -1547,9 +1697,9 @@ namespace ex01_DataStructure
 			RecordData data{ 1, "a" };
 			RecordData data2{ 2, "a" };
 			list.PushBack(data);
-			DoublyLinkedList::ConstIterator it = list.GetBegin();
+			DoublyLinkedList::Iterator it = list.GetBegin();
 			list.PushBack(data2);
-			DoublyLinkedList::ConstIterator it2 = list.GetBegin();
+			DoublyLinkedList::Iterator it2 = list.GetBegin();
 
 			EXPECT_EQ(true, it != it2);
 		}

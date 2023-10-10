@@ -2,7 +2,7 @@
 //==========================
 //双方向リスト再実装
 //==========================
-//2023/10/06/17:00
+//2023/10/10/14:00
 //作成者:村上輝
 
 // 成績データ
@@ -33,7 +33,6 @@ public:
 	{
 	public:
 		Node* m_Node; //ノードへのポインタ
-	public:
 
 		ConstIterator(Node* node) : m_Node(node) {}
 
@@ -102,6 +101,7 @@ public:
 		const RecordData& operator*() { return this->m_Node->m_data; }
 	};
 
+
 	//双方向リストのコンストラクタ
 	DoublyLinkedList() : m_DummyNode(nullptr), m_DataNum(0) {}
 
@@ -124,11 +124,13 @@ public:
 	{
 		Node* itNode = it.m_Node; // イテレータの指すノード
 
-		if (itNode == nullptr) // イテレータがnullだったらプッシュバック
+		if (m_DataNum == 0) // 要素数が０であったらプッシュバック
 		{
 			PushBack(data);
 			return true;
 		}
+		if (!CheckThisData(it)) return false; // イテレータが別のリストの要素を指すイテレータであったらreturn
+		if (itNode == nullptr) return false; // イテレータがnullだったらreturn
 
 		Node* newNode = new Node(data); // 新ノード
 		newNode->m_prev = itNode->m_prev; // 新ノードの前ノードをイテレータの指す前ノードに。
@@ -272,22 +274,28 @@ public:
 		return ConstIterator(end);
 	}
 
-	// 全データを格納順に描画
-	bool Draw()
+	// 引数のイテレータが指す要素がこのリストに存在する要素かどうかを判別する
+	bool CheckThisData(ConstIterator& it)
 	{
-		if (m_DataNum == 0)
+		Node* itNode = it.m_Node; // イテレータの指すノード
+		if (it == nullptr) return false;
+
+		// ダミーノードを先頭の要素にする
+		while (m_DummyNode->m_prev != nullptr) 
 		{
-			std::cout << "このリストにデータはありません。" << std::endl;
-			return false;
+			m_DummyNode = m_DummyNode->m_prev;
 		}
 
-		Node* current = m_DummyNode; // イテレータの指すノード
-		while (current != nullptr)
+		// このリストのノードの中に引数のイテレータと同じ要素があるかどうか
+		while (m_DummyNode->m_next != nullptr)
 		{
-			std::cout << " score : " << current->m_data.m_score << "   name : " << current->m_data.m_name << std::endl;
-			current = current->m_next;
+			if (m_DummyNode == itNode) return true;
+
+			m_DummyNode = m_DummyNode->m_next;
 		}
-		return true;
+		// 同じ要素があったらTRUE、なかったらFALSEを返す
+		if (m_DummyNode == itNode) return true;
+		return false;
 	}
 
 private:

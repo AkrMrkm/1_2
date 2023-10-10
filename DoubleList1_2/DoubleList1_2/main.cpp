@@ -1,7 +1,7 @@
 //==========================
 //双方向リスト再実装
 //==========================
-//2023/10/06/17:00
+//2023/10/10/14:00
 //作成者:村上輝
 
 #include <iostream>
@@ -25,21 +25,20 @@ int main()
 		// ファイルからデータを読み込んでリストに追加
 		while (inputFile >> score >> name)
 		{
-			DoublyLinkedList::Iterator it = list.GetBegin();
 			RecordData data = { score,name };
-			list.Insert(it, data);
+			list.PushBack(data);
 		}
 
 		// ファイルを閉じる
 		inputFile.close();
 
 		// リストを格納した順で表示
-		DoublyLinkedList::Iterator it = list.GetEnd();
+		DoublyLinkedList::Iterator it = list.GetBegin();
 		for(int i = 0; i < list.GetDataNum(); i++)
 		{
 			RecordData data = *it;
 			std::cout << " score : " << data.m_score << "   name : " << data.m_name << std::endl;
-			--it;
+			++it;
 		}
 	}
 	else // ファイル読み込み失敗
