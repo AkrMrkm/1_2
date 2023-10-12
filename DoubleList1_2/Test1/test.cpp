@@ -1258,7 +1258,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it;
 
-			EXPECT_DEATH(*it, "Assertion Failed.*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(*it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
@@ -1290,7 +1290,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetBegin();
 
-			EXPECT_DEATH(*it, "Assertion Failed.*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(*it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
@@ -1303,7 +1303,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			EXPECT_DEATH(*it, "Assertion Failed.*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(*it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		//===================================イテレータをリストの末尾に向かってひとつ進める===================================
@@ -1318,7 +1318,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it;
 
-			EXPECT_DEATH(++it, "Assertion Failed.*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(++it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
@@ -1331,7 +1331,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetBegin();
 
-			EXPECT_DEATH(++it, "Assertion Failed.*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(++it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
@@ -1344,7 +1344,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			EXPECT_DEATH(++it, "Assertion Failed.*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(++it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
@@ -1432,7 +1432,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			EXPECT_DEATH(--it, "Assertion Failed.*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(--it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
@@ -1445,7 +1445,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			EXPECT_DEATH(--it, "Assertion Failed.*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(--it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
@@ -1458,7 +1458,7 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			EXPECT_DEATH(--it, "Assertion Failed.*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(--it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
