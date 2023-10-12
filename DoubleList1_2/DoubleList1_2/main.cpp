@@ -1,7 +1,7 @@
 //==========================
 //双方向リスト再実装
 //==========================
-//2023/10/10/14:00
+//2023/10/12/15:00
 //作成者:村上輝
 
 #include <iostream>
@@ -27,6 +27,7 @@ int main()
 		{
 			RecordData data = { score,name };
 			list.PushBack(data);
+			DoublyLinkedList::Iterator it = list.GetBegin();
 		}
 
 		// ファイルを閉じる
