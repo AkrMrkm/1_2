@@ -1,10 +1,11 @@
 #pragma once
-//==========================
-//双方向リスト再実装
-//==========================
-//2023/10/12/15:00
-//作成者:村上輝
-
+/**
+* @file manualTest.h
+* @brief 手動テストヘッダー
+* @author 村上輝
+* @date 2023/10/16/11:00
+* @details 課題1_2「双方向リストの再実装」
+*/
 #if !defined ___TECHTRAINING_CHAPTER2_LIST_MANUAL_TEST___
 #define      ___TECHTRAINING_CHAPTER2_LIST_MANUAL_TEST___
 
