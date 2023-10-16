@@ -1,8 +1,10 @@
-//==========================
-//双方向リスト再実装
-//==========================
-//2023/10/12/15:00
-//作成者:村上輝
+/**
+* @file main.cpp
+* @brief 双方向リストクラス
+* @author 村上輝
+* @date 2023/10/16/11:00
+* @details 課題1_2「双方向リストの再実装」
+*/
 
 #include <iostream>
 #include <fstream>
@@ -11,18 +13,18 @@
 
 int main()
 {
-	std::ifstream inputFile("Scores.txt"); //ファイル読み込み
+	std::ifstream inputFile("Scores.txt"); //!ファイル読み込み
 	DoublyLinkedList list;
 
-	if (inputFile.is_open())  //ファイル読み込み成功
+	if (inputFile.is_open())  //!ファイル読み込み成功
 	{
 		std::cerr << "ファイルの読み込みに成功しました。" << std::endl;
 
-		// ファイルから読み込んだ値を格納する変数
+		//! ファイルから読み込んだ値を格納する変数
 		int score;
 		std::string name;
 
-		// ファイルからデータを読み込んでリストに追加
+		//! ファイルからデータを読み込んでリストに追加
 		while (inputFile >> score >> name)
 		{
 			RecordData data = { score,name };
@@ -30,10 +32,10 @@ int main()
 			DoublyLinkedList::Iterator it = list.GetBegin();
 		}
 
-		// ファイルを閉じる
+		//! ファイルを閉じる
 		inputFile.close();
 
-		// リストを格納した順で表示
+		//! リストを格納した順で表示
 		DoublyLinkedList::Iterator it = list.GetBegin();
 		for(int i = 0; i < list.GetDataNum(); i++)
 		{
@@ -42,7 +44,7 @@ int main()
 			++it;
 		}
 	}
-	else // ファイル読み込み失敗
+	else //! ファイル読み込み失敗
 	{
 		std::cerr << "ファイルを開けません。" << std::endl;
 	}

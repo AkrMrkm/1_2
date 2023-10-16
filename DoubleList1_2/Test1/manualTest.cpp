@@ -85,13 +85,13 @@ TEST(GetBegin, TestGetBeginItConst)
 /**********************************************************************************//**
 	@brief		constのメソッドであるか
 	@details	ID:リスト-34\n
-				コンパイルエラーが通れば成功\n
+				コンパイルが通れば成功\n
 *//***********************************************************************************/
 TEST(GetBeginConst, TestGetBeginItConst)
 {
 #if defined TT_TEST_BEGIN_WHEN_CONST
 	const DoublyLinkedList list;
-	DoublyLinkedList::ConstIterator it = list.GetCBegin();// ここでエラー
+	DoublyLinkedList::ConstIterator it = list.GetCBegin();
 #endif //TT_TEST_BEGIN_WHEN_CONST
 	SUCCEED();
 }

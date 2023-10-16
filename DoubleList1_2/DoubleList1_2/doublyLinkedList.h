@@ -1,153 +1,257 @@
+/**
+* @file doublyLinkedList.h
+* @brief 双方向リストクラス
+* @author 村上輝
+* @date 2023/10/16/11:00
+* @details 課題1_2「双方向リストの再実装」
+*/
+
 #pragma once
-//==========================
-//双方向リスト再実装
-//==========================
-//2023/10/12/15:00
-//作成者:村上輝
+
 #include <assert.h>
 
-// 成績データ
+/**
+* @brief 成績データ
+*/
 struct RecordData
 {
-	int m_score; // スコア
-	std::string m_name; // 名前
+	//! スコア
+	int m_score;
+
+	//! 名前
+	std::string m_name; 
 };
 
-//双方向リスト
+/**
+* @brief 双方向リストクラス
+*/
 class DoublyLinkedList
 {
 private:
-	// ノード
+
+	/**
+	* @brief ノード
+	*/
 	struct Node
 	{
-		Node* m_prev; // 前ノード
-		Node* m_next; // 次ノード
-		RecordData m_data; //成績データ
+		//! 前ノード
+		Node* m_prev;
 
+		//! 次ノード
+		Node* m_next;
+
+		//! 成績データ
+		RecordData m_data;
+
+		/**
+		* @brief コンストラクタ
+		*/
 		Node() : m_prev(nullptr), m_next(nullptr), m_data() {}
 		Node(RecordData data) : m_prev(nullptr), m_next(nullptr), m_data(data) {}
 	};
 
 public:
 
-	//コンストイテレータクラス
+	/**
+	* @brief コンストイテレータクラス
+	* @details 双方向リストクラスのインナークラス
+	*/
 	class ConstIterator 
 	{
 	public:
-		Node* m_Node; //ノードへのポインタ
+		//! ノードへのポインタ
+		Node* m_Node;
 
-		ConstIterator() : m_Node(nullptr) {}
-		ConstIterator(Node* node) : m_Node(node) {}
+		//! リストのポインタ
+		const DoublyLinkedList* m_List;
 
-		//イテレータの先頭に向かってひとつ進める
+		/**
+		* @brief コンストラクタ
+		*/
+		ConstIterator() : m_Node(nullptr), m_List(nullptr) {}
+		ConstIterator(Node* node, const DoublyLinkedList* list) : m_Node(node), m_List(list) {}
+
+		/**
+		* @brief イテレータの先頭に向かってひとつ進める(前置)
+		* @return 先頭にひとつ進めたイテレータを返す
+		* @details ノードの参照が無かったらorダミーノードであったらassert
+		*/
 		ConstIterator& operator--()
 		{
-			assert(this->m_Node != nullptr); // ノードの参照が無かったらassert
+			assert(this->m_Node != nullptr);
+			assert(this->m_Node != m_List->m_DummyNode->m_next);
 			m_Node = m_Node->m_prev;
 			return *this;
 		}
 
-		ConstIterator operator--(int) // 後置
+		/**
+		* @brief イテレータの先頭に向かってひとつ進める(後置)
+		* @return 先頭にひとつ進めたイテレータを返す
+		* @details ノードの参照が無かったらorダミーノードであったらassert
+		*/
+		ConstIterator operator--(int)
 		{
 			assert(this->m_Node != nullptr); // ノードの参照が無かったらassert
+			assert(this->m_Node != m_List->m_DummyNode); // リストが空orダミーノードであったら
 			ConstIterator ci = *this;
 			m_Node = m_Node->m_prev;
 			return ci;
 		}
 
-		//イテレータの末尾に向かってひとつ進める
+		/**
+		* @brief イテレータの末尾に向かってひとつ進める(前置)
+		* @return 末尾にひとつ進めたイテレータを返す
+		* @details ノードの参照が無かったらorダミーノードであったらassert
+		*/
 		ConstIterator& operator++()
 		{
-			assert(this->m_Node != nullptr); // ノードの参照が無かったらassert
+			assert(this->m_Node != nullptr);
+			assert(this->m_Node != m_List->m_DummyNode);
 			m_Node = m_Node->m_next;
 			return *this;
 		}
 
-		ConstIterator operator++(int) // 後置
+		/**
+		* @brief イテレータの末尾に向かってひとつ進める(後置)
+		* @return 末尾にひとつ進めたイテレータを返す
+		* @details ノードの参照が無かったらorダミーノードであったらassert
+		*/
+		ConstIterator operator++(int)
 		{
-			assert(this->m_Node != nullptr); // ノードの参照が無かったらassert
+			assert(this->m_Node != nullptr);
+			assert(this->m_Node != m_List->m_DummyNode);
 			ConstIterator ci = *this;
 			m_Node = m_Node->m_next;
 			return ci;
 		}
 
-		//イテレータの指す要素を取得する(const)
+		/**
+		* @brief イテレータの指す要素を取得する(const)
+		* @return イテレータの指す成績データを返す
+		* @details ノードの参照が無かったらorダミーノードであったらassert
+		*/
 		const RecordData& operator*() const 
 		{
-			assert(this->m_Node != nullptr); // ノードの参照が無かったらassert
+			assert(this->m_Node != nullptr);
+			assert(this->m_Node != m_List->m_DummyNode);
 			return this->m_Node->m_data; 
 		}
 
-		//コピーコンストラクタ
-		ConstIterator(const ConstIterator& ci) : m_Node(ci.m_Node){}
+		/**
+		* @brief コピーコンストラクタ
+		*/
+		ConstIterator(const ConstIterator& ci) : m_Node(ci.m_Node), m_List(ci.m_List){}
 
-		//代入を行う
+		/**
+		* @brief 代入を行う* 
+		* @param[in] ci 代入するイテレータ
+		* @details イテレータのノードを代入する
+		*/
 		ConstIterator& operator=(const ConstIterator& ci)
 		{
 			m_Node = ci.m_Node;
 			return *this;
 		}
 
-		//同一か比較する
+		/**
+		* @brief 同一か比較する
+		* @param[in] ci 同一か比較するイテレータ
+		* @return イテレータの指す要素が同一であればtrueを返す
+		*/
 		bool operator==(const ConstIterator& ci)
 		{
 			return (m_Node == ci.m_Node);
 		}
 
-		//異なるか比較する
+		/**
+		* @brief 異なるか比較する
+		* @param[in] ci 異なるか比較するイテレータ
+		* @return イテレータの指す要素が異なればtrueを返す
+		*/
 		bool operator!=(const ConstIterator& ci)
 		{
 			return (m_Node != ci.m_Node);
 		}
 	};
 
-	//イテレータクラス
+	/**
+	* @brief イテレータクラス
+	* @details コンストイテレータクラスの派生クラス
+	*/
 	class Iterator : public ConstIterator
 	{
 	public:
-		// コンストラクタ
+		/**
+		* @brief コンストラクタ
+		*/
 		Iterator() : ConstIterator() {}
-		Iterator(Node* n) : ConstIterator(n) {}
+		Iterator(Node* n, DoublyLinkedList* list) : ConstIterator(n, list) {}
 
-		// イテレータの指す要素を取得する(非const)
+		/**
+		* @brief イテレータの指す要素を取得する(非const)
+		* @return イテレータの指す成績データを返す
+		* @details ノードの参照が無かったらorダミーノードであったらassert
+		*/
 		RecordData& operator*() 
 		{
-			assert(this->m_Node != nullptr); // ノードの参照が無かったらassert
+			assert(this->m_Node != nullptr);
+			assert(this->m_Node != m_List->m_DummyNode);
 			return this->m_Node->m_data; 
 		}
 	};
 
 
-	//双方向リストのコンストラクタ
-	DoublyLinkedList() : m_DummyNode(nullptr), m_DataNum(0) {}
-
-	//デストラクタ
-	virtual ~DoublyLinkedList() // 先頭から末尾までdelete
+	/**
+	* @brief 双方向リストクラスのコンストラクタ
+	* @details データ数、ダミーノードを初期化\n
+			   リストが空の場合、ダミーノードの前後はダミーノード自身を参照\n
+	*/
+	DoublyLinkedList() : m_DataNum(0) 
 	{
-		while (m_DummyNode != m_DummyNode)
+		m_DummyNode = new Node();
+		m_DummyNode->m_next = m_DummyNode;
+		m_DummyNode->m_prev = m_DummyNode;
+	}
+
+	/**
+	* @brief 双方向リストクラスのデストラクタ
+	* @details 先頭から末尾までdelete
+	*/
+	virtual ~DoublyLinkedList()
+	{
+		if (m_DataNum == 0) return;
+		while(m_DataNum > 0)
 		{
 			Node* temp = m_DummyNode;
 			m_DummyNode = m_DummyNode->m_next;
 			delete temp;
+			m_DataNum--;
 		}
 	}
 
-	//データ数の取得
+	/**
+	* @brief データ数の取得
+	* @return リストのデータの総数を返す
+	*/
 	int GetDataNum() const
 	{
 		return m_DataNum;
 	}
-	
-	// データの挿入(イテレータの指すノードの前に挿入)
+
+	/**
+	* @brief データの挿入
+	* @param[in] it 挿入したい位置のイテレータ
+	* @param[in] data 挿入したい成績データ
+	* @return bool(挿入が成功すればtrue、失敗すればfalse)
+	* @details イテレータの指すノードの前に挿入する
+	*/
 	bool Insert(ConstIterator& it, RecordData& data)
 	{
 		Node* newNode = new Node(data); // 新ノード
 
 		if (m_DataNum == 0) // 要素数が０であったら
 		{
-			// ダミーノードを作り、一つ目のノードと繋げる
-			m_DummyNode = new Node();
-
+			// ダミーノードを一つ目のノードと繋げる
 			newNode->m_prev = m_DummyNode;
 			newNode->m_next = m_DummyNode;
 
@@ -160,7 +264,7 @@ public:
 			return true;
 		}
 
-		if (!CheckThisData(it)) return false; // イテレータが別のリストの要素を指すイテレータであったらreturn
+		if (it.m_List != this) return false; // イテレータが別のリストの要素を指すイテレータであったらreturn
 
 		Node* itNode = it.m_Node; // イテレータの指すノード
 
@@ -169,7 +273,7 @@ public:
 
 		// 新ノードの次ノードをイテレータの指すノードに。
 		newNode->m_next = itNode;
-
+		
 		// イテレータの指すノードの前ノードの次のノードに新ノードを格納
 		// (イテレータノードと前ノードの間に格納)
 		itNode->m_prev->m_next = newNode;
@@ -183,17 +287,19 @@ public:
 		return true;
 	}
 
-	// データの追加
-	bool PushBack(RecordData& data)
+	/**
+	* @brief データの追加
+	* @param[in] data 追加したい成績データ
+	* @details 末尾にデータの追加
+	*/
+	void PushBack(RecordData& data)
 	{
 		Node* newNode = new Node(data);
 
 		// リストが空っぽだったら
 		if (m_DataNum == 0)
 		{
-			// ダミーノードを作り、一つ目のノードと繋げる
-			m_DummyNode = new Node();
-
+			// ダミーノードを一つ目のノードと繋げる
 			newNode->m_prev = m_DummyNode;
 			newNode->m_next = m_DummyNode;
 
@@ -201,7 +307,7 @@ public:
 			m_DummyNode->m_prev = newNode;
 
 			m_DataNum++;
-			return true;
+			return;
 		}
 
 		newNode->m_prev = m_DummyNode->m_prev;
@@ -211,17 +317,23 @@ public:
 
 		m_DataNum++;
 
-		return true;
+		return;
 	}
 
-	// データの削除
+	/**
+	* @brief データの削除
+	* @param[in] it 削除したい位置のイテレータ
+	* @return 削除に失敗したらfalse、成功したらtrueを返す
+	* @details イテレータの指すノードを削除\n
+				データ数が0、イテレータの指すノードがダミーノード、別リストを指すイテレータであれば何も行わない\n
+	*/
 	bool Remove(ConstIterator& it)
 	{
-		if (m_DataNum == 0) return false;
-		if (it == m_DummyNode) return false;
-		if (!CheckThisData(it)) return false; // イテレータが別のリストの要素を指すイテレータであったらreturn
-
 		Node* itNode = it.m_Node; // イテレータの指すノード
+		if (m_DataNum == 0) return false;
+		if (itNode == m_DummyNode) return false;
+		if (it.m_List != this) return false; // イテレータが別のリストの要素を指すイテレータであったらreturn
+
 
 		itNode->m_prev->m_next = itNode->m_next;
 		itNode->m_next->m_prev = itNode->m_prev;
@@ -231,56 +343,47 @@ public:
 		return true;
 	}
 
-	// 先頭イテレータ取得
+	/**
+	* @brief 先頭イテレータ取得
+	* @return ダミーノードの次のノード(先頭のイテレータを返す)
+	*/
 	Iterator GetBegin() 
 	{
-		if(m_DummyNode == nullptr)
-			return Iterator(nullptr);
-		return Iterator(m_DummyNode->m_next);
+		return Iterator(m_DummyNode->m_next, this);
 	}
 
-	// 先頭コンストイテレータ取得
+	/**
+	* @brief 先頭コンストイテレータ取得
+	* @return ダミーノードの次のノード(先頭のコンストイテレータを返す)
+	*/
 	ConstIterator GetCBegin() const
 	{
-		if (m_DummyNode == nullptr)
-			return ConstIterator(nullptr);
-		return ConstIterator(m_DummyNode->m_next);
+		return ConstIterator(m_DummyNode->m_next, this);
 	}
 
-	// 末尾イテレータ取得
+	/**
+	* @brief 末尾イテレータ取得
+	* @return ダミーノードを返す
+	*/
 	Iterator GetEnd() 
 	{
-		if (m_DummyNode == nullptr)
-			return Iterator(nullptr);
-		return Iterator(m_DummyNode);
+		return Iterator(m_DummyNode, this);
 	}
 
-	// 末尾コンストイテレータ取得
-	ConstIterator GetCEnd() const
+	/**
+	* @brief 末尾コンストイテレータ取得
+	* @return ダミーノードを返す
+	*/
+	 ConstIterator GetCEnd() const
 	{
-		if (m_DummyNode == nullptr)
-			return ConstIterator(nullptr);
-		return ConstIterator(m_DummyNode);
-	}
-
-	// 引数のイテレータが指す要素がこのリストに存在する要素かどうかを判別する
-	bool CheckThisData(ConstIterator& it)
-	{
-		Node* itNode = it.m_Node; // イテレータの指すノード
-
-		Node* temp = m_DummyNode;
-
-		while (temp != itNode)
-		{
-			temp = temp->m_next;
-			if (temp == m_DummyNode)
-				return false;
-		}
-		return true;
+		return ConstIterator(m_DummyNode, this);
 	}
 
 private:
 
-	Node* m_DummyNode; // ダミーノード
-	int m_DataNum{}; // データ数
+	//! ダミーノード
+	Node* m_DummyNode;
+
+	//! データ数
+	int m_DataNum{};
 };

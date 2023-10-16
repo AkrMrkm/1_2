@@ -623,8 +623,9 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetBegin();
 
-			// ダミーノードなので、nullであれば成功
-			EXPECT_EQ(true, it == nullptr);
+			// リストが空の場合はダミーノードの前後はダミーノード自身を指す
+			EXPECT_EQ(true, it.m_Node == it.m_Node->m_next);
+			EXPECT_EQ(true, it.m_Node == it.m_Node->m_prev);
 		}
 
 		/**********************************************************************************//**
@@ -779,8 +780,9 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::ConstIterator it = list.GetCBegin();
 
-			// ダミーノードなので、nullであれば成功
-			EXPECT_EQ(true, it == nullptr);
+			// リストが空の場合はダミーノードの前後はダミーノード自身を指す
+			EXPECT_EQ(true, it.m_Node == it.m_Node->m_next);
+			EXPECT_EQ(true, it.m_Node == it.m_Node->m_prev);
 		}
 
 		/**********************************************************************************//**
@@ -796,7 +798,7 @@ namespace ex01_DataStructure
 
 			list.PushBack(data);
 			DoublyLinkedList::ConstIterator it = list.GetCBegin();
-			const RecordData itData = *it;
+			RecordData itData = *it;
 
 			EXPECT_EQ(1, (itData.m_score));
 		}
@@ -817,7 +819,7 @@ namespace ex01_DataStructure
 			list.PushBack(data2);
 
 			DoublyLinkedList::ConstIterator it = list.GetCBegin();
-			const RecordData itData = *it;
+			RecordData itData = *it;
 
 			EXPECT_EQ(1, (itData.m_score));
 		}
@@ -936,8 +938,9 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			// ダミーノードなので、nullであれば成功
-			EXPECT_EQ(true, it == nullptr);
+			// リストが空の場合はダミーノードの前後はダミーノード自身を指す
+			EXPECT_EQ(true, it.m_Node == it.m_Node->m_next);
+			EXPECT_EQ(true, it.m_Node == it.m_Node->m_prev);
 		}
 
 		/**********************************************************************************//**
@@ -955,12 +958,9 @@ namespace ex01_DataStructure
 
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-
-			// 末尾イテレータの要素データが最初に入れたデータではなく、末尾イテレータの前の要素が最初に入れた値であったら成功
-			RecordData itData = *(it);
-			EXPECT_NE(1, itData.m_score); // !=
-			itData = *(--it);
-			EXPECT_EQ(1, itData.m_score); // ==
+			// 末尾イテレータの前の要素が最初に入れた値であったら成功
+			RecordData itData = *(--it);
+			EXPECT_EQ(1, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -980,18 +980,10 @@ namespace ex01_DataStructure
 
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			// 末尾イテレータの要素データが最後に入れたデータではなく、末尾イテレータの前の要素が最後に入れた値であったら成功
-			RecordData itData = *(it);
-			EXPECT_NE(1, itData.m_score); // !=
-			EXPECT_NE(2, itData.m_score); // !=
-
+			// 末尾イテレータの前の要素が最後に入れた値であったら成功
+			RecordData itData = *(--it);
 			//末尾イテレータの前は末尾要素を指す
-			itData = *(--it);
-			EXPECT_EQ(2, itData.m_score); // ==
-			//末尾イテレータの後ろは先頭要素を指す
-			it = list.GetEnd();
-			itData = *(++it);
-			EXPECT_EQ(1, itData.m_score); // ==
+			EXPECT_EQ(2, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -1096,8 +1088,9 @@ namespace ex01_DataStructure
 			DoublyLinkedList list;
 			DoublyLinkedList::ConstIterator it = list.GetEnd();
 
-			// ダミーノードなので、nullであれば成功
-			EXPECT_EQ(true, it == nullptr);
+			// リストが空の場合はダミーノードの前後はダミーノード自身を指す
+			EXPECT_EQ(true, it.m_Node == it.m_Node->m_next);
+			EXPECT_EQ(true, it.m_Node == it.m_Node->m_prev);
 		}
 
 		/**********************************************************************************//**
@@ -1116,11 +1109,9 @@ namespace ex01_DataStructure
 			DoublyLinkedList::ConstIterator it = list.GetCEnd();
 
 
-			// 末尾イテレータの要素データが最初に入れたデータではなく、末尾イテレータの前の要素が最初に入れた値であったら成功
-			RecordData itData = *(it);
-			EXPECT_NE(1, itData.m_score); // !=
-			itData = *(--it);
-			EXPECT_EQ(1, itData.m_score); // ==
+			// 末尾イテレータの前の要素が最初に入れた値であったら成功
+			RecordData itData = *(--it);
+			EXPECT_EQ(1, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -1140,18 +1131,9 @@ namespace ex01_DataStructure
 
 			DoublyLinkedList::ConstIterator it = list.GetCEnd();
 
-			// 末尾イテレータの要素データが最後に入れたデータではなく、末尾イテレータの前の要素が最後に入れた値であったら成功
-			RecordData itData = *(it);
-			EXPECT_NE(1, itData.m_score); // !=
-			EXPECT_NE(2, itData.m_score); // !=
-
-			//末尾イテレータの前は末尾要素を指す
-			itData = *(--it);
-			EXPECT_EQ(2, itData.m_score); // ==
-			//末尾イテレータの後ろは先頭要素を指す
-			it = list.GetEnd();
-			itData = *(++it);
-			EXPECT_EQ(1, itData.m_score); // ==
+			// 末尾イテレータの前の要素が最後に入れた値であったら成功
+			RecordData itData = *(--it);
+			EXPECT_EQ(2, itData.m_score);
 		}
 
 		/**********************************************************************************//**
@@ -1301,9 +1283,11 @@ namespace ex01_DataStructure
 		TEST(IteratorGetTest, TestEmptyEnd)
 		{
 			DoublyLinkedList list;
+			RecordData data{ 1, "a" };
+			list.PushBack(data);
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			EXPECT_DEATH(*it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(*it, ".*"); // ダミーノードを指すのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		//===================================イテレータをリストの末尾に向かってひとつ進める===================================
@@ -1339,12 +1323,14 @@ namespace ex01_DataStructure
 			@details	ID:リスト-7\n
 						Assert発生\n
 		*//***********************************************************************************/
-		TEST(IteratorGoEndTest, TestEmptyEnd)
+		TEST(IteratorGoEndTest, TestEndIt)
 		{
 			DoublyLinkedList list;
+			RecordData data{ 1, "a" };
+			list.PushBack(data);
 			DoublyLinkedList::Iterator it = list.GetEnd();
 
-			EXPECT_DEATH(++it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(++it, ".*"); // ダミーノードを指すのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
@@ -1430,9 +1416,9 @@ namespace ex01_DataStructure
 		TEST(IteratorGoBeginTest, TestNoReference)
 		{
 			DoublyLinkedList list;
-			DoublyLinkedList::Iterator it = list.GetEnd();
+			DoublyLinkedList::Iterator it;
 
-			EXPECT_DEATH(--it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(--it, ".*"); // リストの参照がないのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
@@ -1440,7 +1426,7 @@ namespace ex01_DataStructure
 			@details	ID:リスト-12\n
 						Assert発生\n
 		*//***********************************************************************************/
-		TEST(IteratorGoBeginTest, TestEmptyBegin)
+		TEST(IteratorGoBeginTest, TestEmptyEnd)
 		{
 			DoublyLinkedList list;
 			DoublyLinkedList::Iterator it = list.GetEnd();
@@ -1453,12 +1439,14 @@ namespace ex01_DataStructure
 			@details	ID:リスト-13\n
 						Assert発生\n
 		*//***********************************************************************************/
-		TEST(IteratorGoBeginTest, TestEmptyEnd)
+		TEST(IteratorGoBeginTest, TestBeginIt)
 		{
 			DoublyLinkedList list;
-			DoublyLinkedList::Iterator it = list.GetEnd();
+			RecordData data{ 1, "a" };
+			list.PushBack(data);
+			DoublyLinkedList::Iterator it = list.GetBegin();
 
-			EXPECT_DEATH(--it, ".*"); // リストが空なのでアサートが発生してプログラムが異常終了することを確認
+			EXPECT_DEATH(--it, ".*"); // ダミーノードを指すのでアサートが発生してプログラムが異常終了することを確認
 		}
 
 		/**********************************************************************************//**
